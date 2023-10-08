@@ -211,11 +211,7 @@ output_column={'sst2': 'label',
 # Change it for other tasks
 for task_name in ['tweet_eval', 'trec', 'sst2', 'subj', 'cr', 'rt', 'ag_news']:
     path,name=data_path[task_name]
-    if task_name in ['sst5']:
-        dataset = load_from_disk(f"/cpfs01/user/rensiyu/OpenICL/data/{task_name}")
-    elif task_name in ['tweet_eval', 'trec', 'sst2', 'subj', 'cr', 'rt', 'ag_news', 'fb', 'emo']:
-        dataset = load_from_disk(f"./data/{task_name}")
-    else: dataset = load_dataset(path=path,name=name)
+    dataset = load_dataset(path=path,name=name)
 
     if task_name == 'fb':
         dataset['train'] = load_dataset(path=path, name=name, split='train[:50%]')
