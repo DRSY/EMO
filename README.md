@@ -10,7 +10,7 @@ widely observed when decoding from the distributions learned by such models. We 
 ```bash
 git clone https://github.com/DRSY/EMO.git
 cd EMO
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 ### Run continual fine-tuning on WikiText-103 using LLaMa2-7B
 The core script for lightweight continual fine-tuning is named run_emo.sh. Training hyper-parameters can be adjusted as needed.
