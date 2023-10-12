@@ -1,7 +1,7 @@
 export CUDA_VISIBLE_DEVICES=0,
 
 mode=emo2 # training objective
-model=TheBloke/Llama-2-7B-fp16 # model path for llama
+model=$1 # model path for llama
 bsz=16 # per device training batch size
 blk_size=256 # sequence length
 lr=2e-5 # learning rate

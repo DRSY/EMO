@@ -1,9 +1,12 @@
 export CUDA_VISIBLE_DEVICES=0,1,2,3
 
+model_path=$1
+mode=$2
+
 echo "Start training"
 torchrun --nproc_per_node=4 --master_port=2346 stanford_alpaca/train.py \
-    --model_name_or_path /cpfs01/shared/NLP-A100/NLP-A100_hdd/share_model/7b \
-    --mode emo \
+    --model_name_or_path $model_path \
+    --mode $mode \
     --data_path stanford_alpaca/alpaca_data.json \
     --bf16 True \
     --output_dir stanford_alpaca/output_emo_alpaca \

@@ -16,13 +16,15 @@ pip install -r requirements.txt
 ### Run continual fine-tuning on WikiText-103 using LLaMa2-7B
 The core script for lightweight continual fine-tuning is named finetune.sh. Training hyper-parameters are defined in the script and can be adjusted as needed.
 ```bash
-bash finetune.sh
+bash finetune.sh MODEL_PATH
 ```
+MODEL_PATH points to the model name on HuggingFace or path to a local directory.
 ### Merge and export the trained model
 if the model is fine-tuned using LoRA, we need to first merge the trained LoRA weights into the original model checkpoint.
 ```bash
 bash merge.sh MODEL_PATH OUTPUT_MODEL_PATH
 ```
+Specify your desired path for saving the merged model checkpoint at OUTPUT_MODEL_PATH.
 
 ### Run downstream tasks using few-shot in-context learning
 The fine-tuned model can be evaluated on downstream natural language understanding tasks using few-shot in-context learning.
@@ -34,7 +36,7 @@ CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_MODEL_PATH
 We provide the scripts for running EMO on Alpaca via supervised fine-tuning(SFT). Necessary scource code and dataset are located under the [stanford_alpaca](./stanford_alpaca/).
 ```bash
 cd stanford_alpaca
-bash train_emo.sh
+bash train_emo.sh MODEL_PATH emo
 ```
 By default, we use FSDP to fine-tune LLaMa-7B using 4 A100-80G GPUs. Hyper-parameters related to the training setting can be adjusted in [train_emo.sh](./stanford_alpaca/train_emo.sh).
 
