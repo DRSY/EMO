@@ -13,7 +13,7 @@ git clone https://github.com/DRSY/EMO.git
 cd EMO
 pip install -r requirements.txt
 ```
-### Run continual fine-tuning on WikiText-103 using LLaMa2-7B
+### Run continual fine-tuning on WikiText-103
 The core script for lightweight continual fine-tuning is named finetune.sh. Training hyper-parameters are defined in the script and can be adjusted as needed.
 ```bash
 bash finetune.sh MODEL_PATH
