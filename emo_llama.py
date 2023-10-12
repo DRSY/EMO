@@ -8,17 +8,13 @@ from transformers import LlamaModel
 class EMOLlamaForCausalLM(LlamaForCausalLM):
     """
     EMO for LLaMa causal language model
-    More suitable for pre-training/sft
+    More suitable for pre-training/SFT
     """
     def __init__(self, config):
         super().__init__(config)
         self.model = LlamaModel(config)
 
         self.lm_head = torch.nn.Linear(config.hidden_size, config.vocab_size, bias=False)
-
-        # Embedding matrix E that is used to compute the transport cost C
-        # Should have the same vocabulary as the LM being trained
-        self.cost_embedding = self.lm_head.weight.data.clone()
 
         # Initialize weights and apply final processing
         self.post_init()
@@ -60,9 +56,8 @@ class EMOLlamaForCausalLM(LlamaForCausalLM):
         # ======================================================================== #
         hidden_states = outputs[0]
         logits = self.lm_head(hidden_states)
-        mask = attention_mask[:, 1:].contiguous().view(-1).to(logits.dtype)
-        labels = input_ids * attention_mask - 100 * (1 - attention_mask)
-        seq_len = logits.shape[1]-1
+        mask = labels[:, 1:].contiguous().view(-1)
+        mask = (mask!=-100).to(logits.dtype)
         loss_fct = torch.nn.CrossEntropyLoss(reduction='none')
         logits = logits[:, :-1, :].contiguous().view(-1, logits.shape[-1])
         labels = labels[:, 1:].contiguous().view(-1)
@@ -131,17 +126,21 @@ class EMOLlama2ForCausalLM(LlamaForCausalLM):
             return_dict=return_dict,
         )
 
+        # ======================================================================== #
+        #                   Compute the MLE loss
+        # ======================================================================== #
         hidden_states = outputs[0]
         logits = self.lm_head(hidden_states)
-        labels = input_ids * attention_mask - 100 * (1 - attention_mask)
-        seq_len = logits.shape[1]-1
+        mask = labels[:, 1:].contiguous().view(-1)
+        mask = (mask!=-100).to(logits.dtype)
         loss_fct = torch.nn.CrossEntropyLoss(reduction='none')
         logits = logits[:, :-1, :].contiguous().view(-1, logits.shape[-1])
         labels = labels[:, 1:].contiguous().view(-1)
         mle_loss = loss_fct(logits, labels)
-        mask = attention_mask[:, 1:].contiguous().view(-1).to(logits.dtype)
 
-        bsz = input_ids.shape[0]
+        # ======================================================================== #
+        #                   Compute the EMO loss
+        # ======================================================================== #
         labels_tmp = labels.clone()
         labels_tmp[labels_tmp==(-100)] = 0
         one_hot = torch.nn.functional.one_hot(labels_tmp, num_classes=self.config.vocab_size).to(logits.dtype)
@@ -151,8 +150,12 @@ class EMOLlama2ForCausalLM(LlamaForCausalLM):
         p_contextual_repr = stable_onehot @ embedding_matrix.detach() # (bsz*seq_len, hidden_size)
         q_grad = torch.log_softmax(logits, dim=-1).exp() # (bsz*seq_len, vocab_size)
         q_contextual_repr = q_grad @ embedding_matrix.detach() # (bsz*seq_len, hidden_size)
-        emo_loss = (1 - torch.sum(p_contextual_repr*q_contextual_repr, dim=-1)) / 0.2 # (bsz*seq_len,)
-        loss = (emo_loss / (mle_loss+1e-10)).detach()*0.2*mle_loss + emo_loss
+        emo_loss = (1 - torch.sum(p_contextual_repr*q_contextual_repr, dim=-1)) # (bsz*seq_len,)
+
+        # ======================================================================== #
+        #                   Compose the final loss
+        # ======================================================================== #
+        loss = (emo_loss / (mle_loss+1e-10)).detach()*mle_loss + emo_loss
         loss = (loss * mask).sum() / (1e-15 + mask.sum())
 
         output = (logits,) + outputs[1:]

@@ -13,11 +13,12 @@ cd EMO
 pip install -r requirements.txt
 ```
 ### Run continual fine-tuning on WikiText-103 using LLaMa2-7B
-The core script for lightweight continual fine-tuning is named run_emo.sh. Training hyper-parameters can be adjusted as needed.
+The core script for lightweight continual fine-tuning is named finetune.sh. Training hyper-parameters are defined in the script and can be adjusted as needed.
 ```bash
-bash run_emo.sh
+bash finetune.sh
 ```
 ### Merge and export the trained model
+if the model is fine-tuned using LoRA, we need to first merge the trained LoRA weights into the original model checkpoint.
 ```bash
 bash merge.sh MODEL_PATH OUTPUT_MODEL_PATH
 ```
@@ -27,3 +28,15 @@ The fine-tuned model can be evaluated on downstream natural language understandi
 ```bash
 CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_MODEL_PATH
 ```
+
+### Supervised Fine-tuning
+We provide the scripts for running EMO on Alpaca via supervised fine-tuning(SFT). Necessary scource code and dataset are located under the [stanford_alpaca](./stanford_alpaca/).
+```bash
+cd stanford_alpaca
+bash train_emo.sh
+```
+By default, we use FSDP to fine-tune LLaMa-7B using 4 A100-80G GPUs. Hyper-parameters related to the training setting can be adjusted in [train_emo.sh](./stanford_alpaca/train_emo.sh).
+
+## Acknowledgements
++ Evaluation on NLU tasks is implemented using [OpenICL](https://github.com/Shark-NLP/OpenICL).
++ SFT is implemented based on [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca).
