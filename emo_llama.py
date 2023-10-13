@@ -145,7 +145,7 @@ class EMOLlama2ForCausalLM(LlamaForCausalLM):
         labels_tmp[labels_tmp==(-100)] = 0
         one_hot = torch.nn.functional.one_hot(labels_tmp, num_classes=self.config.vocab_size).to(logits.dtype)
         stable_onehot = (one_hot+1e-15) / torch.linalg.vector_norm((one_hot+1e-15), ord=1, dim=-1, keepdim=True) # (bsz*seq_len, vocab_size)
-        embedding_matrix = self.lm_head.weight # (vocab_size, hidden_size)
+        embedding_matrix = self.cost_embedding # (vocab_size, hidden_size)
         embedding_matrix = embedding_matrix / torch.linalg.vector_norm(embedding_matrix, ord=2, dim=1, keepdim=True)
         p_contextual_repr = stable_onehot @ embedding_matrix.detach() # (bsz*seq_len, hidden_size)
         q_grad = torch.log_softmax(logits, dim=-1).exp() # (bsz*seq_len, vocab_size)
