@@ -32,13 +32,6 @@ The fine-tuned model can be evaluated on downstream natural language understandi
 CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_MODEL_PATH
 ```
 
-### Supervised Fine-tuning
-We provide the scripts for running EMO on Alpaca via supervised fine-tuning(SFT). Necessary scource code and dataset are located under the [stanford_alpaca](./stanford_alpaca/).
-```bash
-cd stanford_alpaca
-bash train_emo.sh MODEL_PATH emo
-```
-By default, we use FSDP to fine-tune LLaMa-7B using 4 A100-80G GPUs. Hyper-parameters related to the training setting can be adjusted in [train_emo.sh](./stanford_alpaca/train_emo.sh).
 
 ## Acknowledgements
 + Evaluation on NLU tasks is implemented using [OpenICL](https://github.com/Shark-NLP/OpenICL).
