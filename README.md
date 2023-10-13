@@ -35,4 +35,3 @@ CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_MODEL_PATH
 
 ## Acknowledgements
 + Evaluation on NLU tasks is implemented using [OpenICL](https://github.com/Shark-NLP/OpenICL).
-+ SFT is implemented based on [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca).
