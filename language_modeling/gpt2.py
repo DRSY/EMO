@@ -124,9 +124,6 @@ class GPT2MIXModel(GPT2PreTrainedModel):
         input_ids,
         attention_mask,
         mode='mle',
-        payoff_matrix=None,
-        step=None,
-        global_steps=None,
         use_cache=False,
     ):
         labels = input_ids * attention_mask - 100 * (1 - attention_mask)
