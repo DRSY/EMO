@@ -1,4 +1,5 @@
 # EMO
+This is the public codebase for arxiv paper: [EMO: Earth Mover Distance Optimization for Auto-regressive Language Modeling](https://arxiv.org/abs/2310.04691).
 
 ## Abstract
 Neural language models are probabilistic models of human text. They are predominantly trained using maximum likelihood estimation (MLE), which is equivalent
@@ -44,3 +45,17 @@ CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_MODEL_PATH
 
 ## Acknowledgements
 + Evaluation on NLU tasks is implemented using [OpenICL](https://github.com/Shark-NLP/OpenICL).
+
+
+## Citation
+If you find that our paper or code useful, please cite the paper as follows:
+```latex
+@misc{ren2023emo,
+      title={EMO: Earth Mover Distance Optimization for Auto-Regressive Language Modeling}, 
+      author={Siyu Ren and Zhiyong Wu and Kenny Q. Zhu},
+      year={2023},
+      eprint={2310.04691},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+```
