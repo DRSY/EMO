@@ -49,24 +49,15 @@ from transformers import (
     is_torch_tpu_available,
     set_seed,
 )
-from transformers.trainer import EMDTrainer
 from transformers.testing_utils import CaptureLogger
 from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils import check_min_version, send_example_telemetry
 from transformers.utils.versions import require_version
-from peft import (
-    LoraConfig,
-    get_peft_model,
-    get_peft_model_state_dict,
-    prepare_model_for_int8_training,
-    set_peft_model_state_dict,
-    PeftModel
-)
-
 # load customized model
 from emo_llama import EMOLlamaForCausalLM, EMOLlama2ForCausalLM
 
 logger = logging.getLogger(__name__)
+
 
 MODEL_CONFIG_CLASSES = list(MODEL_FOR_CAUSAL_LM_MAPPING.keys())
 MODEL_TYPES = tuple(conf.model_type for conf in MODEL_CONFIG_CLASSES)
@@ -151,10 +142,6 @@ class ModelArguments:
     )
     mixing_ratio: float = field(
         default=0.80,
-    )
-
-    lora: bool = field(
-        default=True,
     )
 
     def __post_init__(self):
@@ -312,31 +299,34 @@ def main():
     # In distributed training, the load_dataset function guarantee that only one local process can concurrently
     # download the dataset.
     if data_args.dataset_name is not None:
-        # Downloading and loading a dataset from the hub.
-        raw_datasets = load_dataset(
-            data_args.dataset_name,
-            data_args.dataset_config_name,
-            cache_dir=model_args.cache_dir,
-            use_auth_token=True if model_args.use_auth_token else None,
-            streaming=data_args.streaming,
-        )
-        if "validation" not in raw_datasets.keys():
-            raw_datasets["validation"] = load_dataset(
+        if 'mattymchen/refinedweb-3m' == data_args.dataset_name:
+            raw_datasets = load_from_disk('data/refineweb_3m')['train'].train_test_split(train_size=0.01, test_size=0.005)
+        else:
+            # Downloading and loading a dataset from the hub.
+            raw_datasets = load_dataset(
                 data_args.dataset_name,
                 data_args.dataset_config_name,
-                split=f"train[:{data_args.validation_split_percentage}%]",
                 cache_dir=model_args.cache_dir,
                 use_auth_token=True if model_args.use_auth_token else None,
                 streaming=data_args.streaming,
             )
-            raw_datasets["train"] = load_dataset(
-                data_args.dataset_name,
-                data_args.dataset_config_name,
-                split=f"train[{data_args.validation_split_percentage}%:]",
-                cache_dir=model_args.cache_dir,
-                use_auth_token=True if model_args.use_auth_token else None,
-                streaming=data_args.streaming,
-            )
+            if "validation" not in raw_datasets.keys():
+                raw_datasets["validation"] = load_dataset(
+                    data_args.dataset_name,
+                    data_args.dataset_config_name,
+                    split=f"train[:{data_args.validation_split_percentage}%]",
+                    cache_dir=model_args.cache_dir,
+                    use_auth_token=True if model_args.use_auth_token else None,
+                    streaming=data_args.streaming,
+                )
+                raw_datasets["train"] = load_dataset(
+                    data_args.dataset_name,
+                    data_args.dataset_config_name,
+                    split=f"train[{data_args.validation_split_percentage}%:]",
+                    cache_dir=model_args.cache_dir,
+                    use_auth_token=True if model_args.use_auth_token else None,
+                    streaming=data_args.streaming,
+                )
     else:
         data_files = {}
         dataset_args = {}
@@ -421,6 +411,9 @@ def main():
         )
 
     if model_args.model_name_or_path:
+        logger.info(f"llama attn replaced with flash attn")
+        tokenizer.pad_token_id = 0
+        tokenizer.padding_side = "left"
         if model_args.mode == 'mle':
             MODEL_CLASS = AutoModelForCausalLM
         elif model_args.mode == 'emo':
@@ -430,39 +423,17 @@ def main():
         # replace llama attention with Flash Attention
         from llama_flash_attn_monkey_patch import replace_llama_attn_with_flash_attn
         replace_llama_attn_with_flash_attn()
-        logger.info(f"llama attn replaced with flash attn")
-        tokenizer.pad_token_id = 0
-        tokenizer.padding_side = "left"
-        logger.info(f"Using model class: {MODEL_CLASS}")
         model = MODEL_CLASS.from_pretrained(
             model_args.model_name_or_path,
-            from_tf=bool(".ckpt" in model_args.model_name_or_path),
-            config=config,
-            cache_dir=model_args.cache_dir,
-            revision=model_args.model_revision,
-            torch_dtype=torch.float16,
-            device_map='auto'
         )
-        if model_args.mode != 'mle':
-        # initialize cost embedding E for EMO from a pre-trained LLM
-            llama13b = AutoModelForCausalLM.from_pretrained('/cpfs01/shared/public/public_hdd/llmeval/model_weights/hf_hub/models--TheBloke--Llama-2-13B-fp16/snapshots/b2e65e8ad4bb35e5abaee0170ebd5fc2134a50bb', torch_dtype=torch.float16, device_map='auto')
-            model.register_buffer('cost_embedding', llama13b.lm_head.weight.data)
-            print('Shape of cost embedding:', model.cost_embedding.shape)
-            print('Shape of current lm head:', model.lm_head.weight.data.shape)
-            del llama13b
-        if model_args.lora:
-            logger.info("LoRA is activated")
-            # setup LoRA for efficient fine-tuning
-            lora_config = LoraConfig(
-                r=32,
-                lora_alpha=16,
-                lora_dropout=0.05,
-                bias="none",
-                inference_mode=False,
-                task_type="CAUSAL_LM",)
-            model = get_peft_model(model, lora_config)
-            model.print_trainable_parameters()
+        cost_embedding = copy.deepcopy(model.lm_head.weight.data)
+        model.register_buffer("cost_embedding", cost_embedding)
+        print(f'cost embedding registered, shape: {model.cost_embedding.shape}')
+
+        logger.info(f"Using model class: {MODEL_CLASS}")
+        model.config.mixing_ratio = model_args.mixing_ratio
         model.config.reduction = 'mean'
+        logger.info(f"Mixing ratio: {model.config.mixing_ratio}")
         logger.info(f"Model class: {model.__class__}")
     else:
         model = AutoModelForCausalLM.from_config(config)
@@ -604,8 +575,7 @@ def main():
 
     # Initialize our Trainer
     training_args.save_strategy = "no"
-    TRAINER_CLASS = Trainer
-    trainer = TRAINER_CLASS(
+    trainer = Trainer(
         model=model,
         args=training_args,
         train_dataset=train_dataset if training_args.do_train else None,
@@ -628,8 +598,6 @@ def main():
             checkpoint = last_checkpoint
         train_result = trainer.train(resume_from_checkpoint=checkpoint)
         trainer.save_model()  # Saves the tokenizer too for easy upload
-        if model_args.lora and hasattr(model, 'base_model'):
-            model.base_model.save_pretrained(training_args.output_dir) # save the backbone LLM when using peft
 
         metrics = train_result.metrics
 

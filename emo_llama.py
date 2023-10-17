@@ -7,8 +7,8 @@ from transformers import LlamaModel
 
 class EMOLlamaForCausalLM(LlamaForCausalLM):
     """
-    EMO for LLaMa causal language model
-    More suitable for pre-training/SFT
+    EMOLLaMa
+    More suitable for pre-training and domain-specific fine-tuning
     """
     def __init__(self, config):
         super().__init__(config)
@@ -90,8 +90,8 @@ class EMOLlamaForCausalLM(LlamaForCausalLM):
 
 class EMOLlama2ForCausalLM(LlamaForCausalLM):
     """
-    EMO for LLaMa causal language model
-    More suitable for downstream nlu tasks after lightweight fine-tuning on general domain corpus, e.g., Wikipedia
+    EMOLLaMa2
+    More suitable for lightweight fine-tuning for improving downstream accuracy
     """
     def forward(
         self,

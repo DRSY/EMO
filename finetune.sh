@@ -2,6 +2,7 @@ export CUDA_VISIBLE_DEVICES=0,
 
 mode=emo2 # training objective
 model=$1 # model path for llama
+output_dir=$2
 bsz=16 # per device training batch size
 blk_size=256 # sequence length
 lr=2e-5 # learning rate
@@ -21,7 +22,7 @@ accelerate launch --config_file accelerate_configs/accelerate_config_0.yaml run_
         --learning_rate $lr \
         --num_train_epochs 1 \
         --do_train \
-        --output_dir ./output/${dataset_name}_llama_7b_${mode}_lr${lr}_${blk_size} \
+        --output_dir $output_dir \
         --overwrite_output_dir \
         --mixing_ratio 1.0 \
         --warmup_ratio 0.03 \
