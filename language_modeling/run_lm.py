@@ -739,7 +739,7 @@ def main():
         if accelerator.is_main_process:
             with open(os.path.join(args.output_dir, "all_results.json"), "w") as f:
                 json.dump({"perplexity": perplexity}, f)
-        MODEL_CLASS = GPT2MIXModel if 'gpt2' in args.model_name_or_path else OPTMIXModel
+        MODEL_CLASS = GPT2MIXModel
         model = MODEL_CLASS.from_pretrained(args.output_dir).to('cuda:0')
         model.eval()
         import statistics
