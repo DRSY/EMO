@@ -55,7 +55,6 @@ from transformers import (
     Trainer
 )
 from gpt2 import GPT2MIXModel
-from opt import OPTMIXModel
 from transformers.utils import check_min_version, get_full_repo_name, send_example_telemetry
 from transformers.utils.versions import require_version
 from test_utils import test, ERF_RATIO, comput_erf, distribution_measures, test_batch
@@ -436,7 +435,7 @@ def main():
         )
 
     if args.model_name_or_path:
-        MODEL_CLASS = GPT2MIXModel if 'gpt2' in args.model_name_or_path else OPTMIXModel
+        MODEL_CLASS = GPT2MIXModel
         model = MODEL_CLASS.from_pretrained(
             args.model_name_or_path,
             from_tf=bool(".ckpt" in args.model_name_or_path),
@@ -643,11 +642,7 @@ def main():
     progress_bar.update(completed_steps)
 
     best_ppl = 1e15
-    # measures = distribution_measures(args, model, raw_datasets, split='test')
     from copy import deepcopy
-    weight = deepcopy(model.lm.lm_head.weight.data).detach()
-    weight = weight / torch.linalg.vector_norm(weight, ord=2, dim=-1, keepdim=True)
-    payoff_matrix = weight @ weight.transpose(0, 1)
     for epoch in range(starting_epoch, args.num_train_epochs):
         model.train()
         if args.with_tracking:
@@ -660,7 +655,7 @@ def main():
         for step, batch in enumerate(active_dataloader):
             with accelerator.accumulate(model):
                 del batch['labels']
-                outputs = model(**batch, mode=args.mode, payoff_matrix=payoff_matrix, step=completed_steps, global_steps=args.max_train_steps)
+                outputs = model(**batch, mode=args.mode)
                 loss = outputs.loss
                 # We keep track of the loss at each epoch
                 if args.with_tracking:
@@ -692,7 +687,7 @@ def main():
         for step, batch in enumerate(eval_dataloader):
             del batch['labels']
             with torch.no_grad():
-                outputs = model(**batch, mode=args.mode, payoff_matrix=payoff_matrix, step=completed_steps, global_steps=args.max_train_steps)
+                outputs = model(**batch, mode=args.mode)
             loss = outputs.loss
             losses.append(accelerator.gather_for_metrics(loss.repeat(args.per_device_eval_batch_size)))
 
