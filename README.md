@@ -55,6 +55,9 @@ CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_PATH/MERGED_PATH
 
 ## Acknowledgements
 + Evaluation on NLU tasks is implemented using [OpenICL](https://github.com/Shark-NLP/OpenICL).
++ Implementation of baselines are from:
+  + [TaiLr](https://github.com/thu-coai/TaiLr)
+  + [MixCE](https://github.com/bloomberg/mixce-acl2023)
 
 
 ## Citation
