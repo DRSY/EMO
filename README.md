@@ -35,7 +35,7 @@ bash merge.sh OUTPUT_PATH MERGED_PATH
 ```
 Specify your desired path for saving the merged model checkpoint at MERGED_PATH.
 
-The core script for lightweight continual fine-tuning in a distributed setting using FSDP with FP16 mixed-precision training is named [finetune_fsdp](./finetune_fsdp.sh).sh. Training hyper-parameters are defined in the script and can be adjusted as needed.
+The core script for lightweight continual fine-tuning in a distributed setting using FSDP with FP16 mixed-precision training is named [finetune_fsdp.sh](./finetune_fsdp.sh). Training hyper-parameters are defined in the script and can be adjusted as needed.
 ```bash
 bash finetune_fsdp.sh MODEL_PATH OUTPUT_PATH
 ```
