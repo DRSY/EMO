@@ -52,9 +52,17 @@ CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_PATH/MERGED_PATH
 ```
 **Note**: you may have to modify the model initialization part of OpenICL in order to run inference in torch.float16 data type.
 
+## Instruction-tuning
+EMO is also applicable in supervised instruction-tuning stage. We provide distributed training script(FSDP full fine-tuning using 4 GPUs) in [instruction_tuning](./instruction_tuning/) folder. Run the following command to launch training of specified model using the alpaca-gpt4 dataset:
+```bash
+cd instruction_tuning
+bash train_emo_alpaca_gpt4.sh MODEL_PATH OUTPUT_DIR
+```
+Training hyper-parameters such as training objective(mle|emo), epochs, and global batch size are defined in [train_emo_alpaca_gpt4.sh](./instruction_tuning/train_emo_alpaca_gpt4.sh) and are kept the same as in Stanford Alpaca codebase, feel free to adjust them as needed.
 
 ## Acknowledgements
 + Evaluation on NLU tasks is implemented using [OpenICL](https://github.com/Shark-NLP/OpenICL).
++ Instruction-tuning code is adapted from [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca).
 + Implementation of baselines are from:
   + [TaiLr](https://github.com/thu-coai/TaiLr)
   + [MixCE](https://github.com/bloomberg/mixce-acl2023)
