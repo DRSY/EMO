@@ -1,4 +1,8 @@
 # EMO
+<p align="center">
+<img src="./emo_alpaca.png" width="200" height="200">
+</p>
+
 This is the public codebase for arxiv paper: [EMO: Earth Mover Distance Optimization for Auto-regressive Language Modeling](https://arxiv.org/abs/2310.04691).
 
 ## Abstract
