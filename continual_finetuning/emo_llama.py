@@ -6,10 +6,6 @@ from transformers import LlamaModel
 
 
 class EMOLlamaForCausalLM(LlamaForCausalLM):
-    """
-    EMOLLaMa
-    More suitable for pre-training and domain-specific fine-tuning
-    """
     def __init__(self, config):
         super().__init__(config)
         self.model = LlamaModel(config)
@@ -89,10 +85,6 @@ class EMOLlamaForCausalLM(LlamaForCausalLM):
 
 
 class EMOLlama2ForCausalLM(LlamaForCausalLM):
-    """
-    EMOLLaMa2
-    More suitable for lightweight fine-tuning for improving downstream accuracy
-    """
     def forward(
         self,
         input_ids: torch.LongTensor = None,

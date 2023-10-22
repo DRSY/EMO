@@ -14,6 +14,35 @@ git clone https://github.com/DRSY/EMO.git
 cd EMO
 pip install -r requirements.txt
 ```
+## Code structure
+This repository provide training scripts for three different scenarios, i.e., language modeling, continual fine-tuning, and instruction tuning, as discussed in the paper. Detailed instructions for each scenario are described in the following sections.
+```
+.
+├── README.md
+├── accelerate_configs
+│   └── accelerate_config_0.yaml
+├── continual_finetuning
+│   ├── emo_llama.py
+│   ├── finetune_fsdp.sh
+│   ├── finetune_lora.sh
+│   ├── icl.py
+│   ├── llama_flash_attn_monkey_patch.py
+│   ├── merge.sh
+│   ├── merge_lora.py
+│   ├── run_clm_trainer_emo.py
+│   └── run_clm_trainer_emo_fsdp.py
+├── instruction_tuning
+│   ├── alpaca_gpt4_data.json
+│   ├── emo_llama.py
+│   ├── flash_attention_patch.py
+│   ├── train.py
+│   └── train_emo_alpaca_gpt4.sh
+├── language_modeling
+│   ├── gpt2.py
+│   ├── run_lm.py
+│   ├── run_lm_gpt2.sh
+│   └── test_utils.py
+```
 ## 🏫 Language Modeling Experiments
 The core code and scripts for language modeling experiments in the paper are located at [language_modeling](./language_modeling/). Model file that implements various training objective can be found at [gpt2.py](./language_modeling/gpt2.py).Training hyper-parameters can be adjusted in [run_lm_gpt2.sh](./language_modeling/run_lm_gpt2.sh). The argument "mode" specifies the training objective(`mle|mixce|tvd|emo`).
 ```bash
@@ -23,10 +52,14 @@ bash run_lm_gpt2.sh
 We use [Mauve](https://github.com/krishnap25/mauve) as the primary evaluation metrics, make sure you install it before running the above script.
 
 ## 📑 NLU Experiments
-### Run continual fine-tuning on WikiText-103
-The core script for lightweight continual fine-tuning on a single GPU using LoRA is named [finetune.sh](./finetune.sh). Training hyper-parameters are defined in the script and can be adjusted as needed.
+Scripts related to continual fine-tuning and downstream NLU evaluations are located under [continual_finetuning](./continual_finetuning/).
 ```bash
-bash finetune.sh MODEL_PATH OUTPUT_PATH
+cd continual_finetuning
+```
+### Run continual fine-tuning on WikiText-103
+The core script for lightweight continual fine-tuning on a single GPU using LoRA is named [finetune_lora.sh](./finetune_lora.sh). Training hyper-parameters are defined in the script and can be adjusted as needed.
+```bash
+bash finetune_lora.sh MODEL_PATH OUTPUT_PATH
 ```
 MODEL_PATH points to the model name on HuggingFace or path to a local directory. OUTPUT_PATH specifies the output directory.
 if the model is fine-tuned using LoRA, we need to first merge the trained LoRA weights into the original model checkpoint.
@@ -59,12 +92,12 @@ EMO is also applicable in supervised instruction-tuning stage. We provide distri
 cd instruction_tuning
 bash train_emo_alpaca_gpt4.sh MODEL_PATH OUTPUT_DIR
 ```
-Training hyper-parameters such as training objective(`mle|emo`), epochs, and global batch size are defined in [train_emo_alpaca_gpt4.sh](./instruction_tuning/train_emo_alpaca_gpt4.sh) and are kept the same as in Stanford Alpaca codebase, feel free to adjust them as needed.
+Training hyper-parameters such as training objective(`mle|emo`), training epochs, and global batch size are defined in [train_emo_alpaca_gpt4.sh](./instruction_tuning/train_emo_alpaca_gpt4.sh) and are kept the same as in Stanford Alpaca codebase, feel free to adjust them as needed.
 
 ## 🌐 Acknowledgements
 + Evaluation on NLU tasks is implemented using [OpenICL](https://github.com/Shark-NLP/OpenICL).
 + Instruction-tuning code is adapted from [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca).
-+ Implementation of baselines are from:
++ Implementation of baselines are based on:
   + [TaiLr](https://github.com/thu-coai/TaiLr)
   + [MixCE](https://github.com/bloomberg/mixce-acl2023)
 
