@@ -8,7 +8,7 @@ widely observed when decoding from the distributions learned by such models. We 
 
 # Usage
 ## Setup
-We recommend using Python>=3.10.0 and Pytorch>=2.0.1.
+We recommend using `python>=3.10.0`, `torch>=2.0.1`, `transformers>=4.30.0`.
 ```bash
 git clone https://github.com/DRSY/EMO.git
 cd EMO
