@@ -14,15 +14,15 @@ git clone https://github.com/DRSY/EMO.git
 cd EMO
 pip install -r requirements.txt
 ```
-## Language Modeling Experiments
-The core code and scripts for language modeling experiments in the paper are located at [language_modeling](./language_modeling/). Model file that implements various training objective can be found at [gpt2.py](./language_modeling/gpt2.py).Training hyper-parameters can be adjusted in [run_lm_gpt2.sh](./language_modeling/run_lm_gpt2.sh). The argument "mode" specifies the training objective(mle|mixce|tvd|emo).
+## 🏫 Language Modeling Experiments
+The core code and scripts for language modeling experiments in the paper are located at [language_modeling](./language_modeling/). Model file that implements various training objective can be found at [gpt2.py](./language_modeling/gpt2.py).Training hyper-parameters can be adjusted in [run_lm_gpt2.sh](./language_modeling/run_lm_gpt2.sh). The argument "mode" specifies the training objective(`mle|mixce|tvd|emo`).
 ```bash
 cd language_modeling
 bash run_lm_gpt2.sh
 ```
 We use [Mauve](https://github.com/krishnap25/mauve) as the primary evaluation metrics, make sure you install it before running the above script.
 
-## NLU Experiments
+## 📑 NLU Experiments
 ### Run continual fine-tuning on WikiText-103
 The core script for lightweight continual fine-tuning on a single GPU using LoRA is named [finetune.sh](./finetune.sh). Training hyper-parameters are defined in the script and can be adjusted as needed.
 ```bash
@@ -50,17 +50,18 @@ Afterwards, we can run evaluation using the following command:
 ```bash
 CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_PATH/MERGED_PATH
 ```
-**Note**: you may have to modify the model initialization part of OpenICL in order to run inference in torch.float16 data type.
+> **Note**
+> you may have to modify the model initialization part of OpenICL in order to run inference in torch.float16 data type.
 
-## Instruction-tuning
+## 📚 Instruction-tuning
 EMO is also applicable in supervised instruction-tuning stage. We provide distributed training script(FSDP full fine-tuning using 4 GPUs) in [instruction_tuning](./instruction_tuning/) folder. Run the following command to launch training of specified model using the alpaca-gpt4 dataset:
 ```bash
 cd instruction_tuning
 bash train_emo_alpaca_gpt4.sh MODEL_PATH OUTPUT_DIR
 ```
-Training hyper-parameters such as training objective(mle|emo), epochs, and global batch size are defined in [train_emo_alpaca_gpt4.sh](./instruction_tuning/train_emo_alpaca_gpt4.sh) and are kept the same as in Stanford Alpaca codebase, feel free to adjust them as needed.
+Training hyper-parameters such as training objective(`mle|emo`), epochs, and global batch size are defined in [train_emo_alpaca_gpt4.sh](./instruction_tuning/train_emo_alpaca_gpt4.sh) and are kept the same as in Stanford Alpaca codebase, feel free to adjust them as needed.
 
-## Acknowledgements
+## 🌐 Acknowledgements
 + Evaluation on NLU tasks is implemented using [OpenICL](https://github.com/Shark-NLP/OpenICL).
 + Instruction-tuning code is adapted from [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca).
 + Implementation of baselines are from:
