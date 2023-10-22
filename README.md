@@ -14,7 +14,7 @@ git clone https://github.com/DRSY/EMO.git
 cd EMO
 pip install -r requirements.txt
 ```
-## Code structure
+## Code Structure
 This repository provide training scripts for three different scenarios, i.e., language modeling, continual fine-tuning, and instruction tuning, as discussed in the paper. Detailed instructions for each scenario are described in the following sections.
 ```
 .
@@ -86,7 +86,7 @@ CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_PATH/MERGED_PATH
 > **Note**
 > you may have to modify the model initialization part of OpenICL in order to run inference in torch.float16 data type.
 
-## 📚 Instruction-tuning
+## 📚 Instruction-Tuning
 EMO is also applicable in supervised instruction-tuning stage. We provide distributed training script(FSDP full fine-tuning using 4 GPUs) in [instruction_tuning](./instruction_tuning/) folder. Run the following command to launch training of specified model using the alpaca-gpt4 dataset:
 ```bash
 cd instruction_tuning
