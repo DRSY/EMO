@@ -120,7 +120,9 @@ CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_PATH/MERGED_PATH
 > you may have to modify the model initialization part of OpenICL in order to run inference in torch.float16 data type.
 
 ## 📚 Instruction-Tuning
-EMO is also applicable in supervised instruction-tuning stage. We provide distributed training script(FSDP full fine-tuning using 4 GPUs) in [instruction_tuning](./instruction_tuning/) folder. We have tested on LLaMa-7B/13B and LLaMa2-7B/13B on the Alpaca-GPT4 dataset. The responses of EMO-tuned models are more frequently deemed as better than those produced by MLE-tuned ones, judged by GPT-4 and [Auto-J](https://github.com/GAIR-NLP/auto-j). Run the following command to launch training of specified model using the alpaca-gpt4 dataset:
+EMO is also applicable in supervised instruction-tuning stage. We provide distributed training script(FSDP full fine-tuning using 4 GPUs) in [instruction_tuning](./instruction_tuning/) folder. We have tested on LLaMa-7B/13B and LLaMa2-7B/13B on the Alpaca-GPT4 dataset. The responses of EMO-tuned models are more frequently deemed as better than those produced by MLE-tuned ones, judged by GPT-4 and [Auto-J](https://github.com/GAIR-NLP/auto-j). 
+
+Run the following command to launch training of specified model using the alpaca-gpt4 dataset:
 ```bash
 cd instruction_tuning
 bash train_emo_alpaca_gpt4.sh MODEL_PATH OUTPUT_DIR
