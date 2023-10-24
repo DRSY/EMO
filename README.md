@@ -11,6 +11,35 @@ to minimizing the forward cross-entropy between the empirical data distribution 
 widely observed when decoding from the distributions learned by such models. We establish that the forward cross-entropy is suboptimal as a distance metric for aligning human and model distribution due to its (1) recall-prioritization (2) negative diversity ignorance and (3) train-test mismatch. In this paper, we propose Earth Mover Distance Optimization (EMO) for auto-regressive language modeling. EMO capitalizes on the inherent properties of earth mover distance to address the aforementioned challenges. Due to the high complexity of direct computation, we further introduce a feasible upper bound for EMO to ease end-to-end training. Upon extensive evaluation of language models trained using EMO and MLE. We find that EMO demonstrates a consistently better language modeling performance than MLE across domains. Moreover, EMO demonstrates noteworthy enhancements in downstream performance with minimal fine-tuning on merely 25,000 sentences. This highlights the tremendous potential of EMO as a lightweight calibration method for enhancing large-scale pre-trained language models.
 
 # Usage
+## Standalone Package
+We provide PyPi package of EMO as a easy-to-use loss function. Before install EMO, make sure you have installed `torch`.
+```bash
+pip install EMOLoss==0.0.1
+```
+### Examples
+EMO requires three input fields, namely logits, labels, and cost_embedding:
+```python
+import torch
+from emo import EMOLoss
+"""
+Signature of EMOLoss
+Args:
+    logits (Tensor, requried): the output logits after lm_head, before applying softmax
+    labels (Tensor, required): the ground truth next tokens
+    cost_embedding (Tensor, required): the cost embedding used to compute the transport cost between individual pairs of tokens
+    ignore_index (Tensor, optional): usually set to -100 as in nn.CrossEntropyLoss
+    mode (Int, optional): 1 by default, it means putting more weight on the MLE loss. Setting mode=2 will put more emphasis on EMO loss. 
+Shape:
+    - logits: (batch_size, seq_len, vocab_size) 
+    - labels: (batch_size, seq_len)
+    - cost_embedding: (vocab_size, hidden_size)
+"""
+logits = torch.rand(32, 1024, 32000)
+labels = torch.ones(32, 1024)
+cost_embedding = torch.rand(32000, 4096)
+emo_loss = EMOLoss(logits, labels, cost_embedding, ignore_index=-100)
+```
+The `cost_embedding` must share the same vocabulary size as `logits`, e.g., 32000 for LLaMa. However, the hidden size of `cost_embedding` is not required to be identical to the model you want to train.
 ## Setup
 We recommend using `python>=3.10.0`, `torch>=2.0.1`, `transformers>=4.30.0`.
 ```bash
