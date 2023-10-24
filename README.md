@@ -34,7 +34,7 @@ Shape:
     - labels: (batch_size, seq_len)
     - cost_embedding: (vocab_size, hidden_size)
 """
-logits = torch.rand(32, 1024, 32000)
+logits = torch.rand(32, 1024, 32000, requires_grad=True)
 labels = torch.ones(32, 1024)
 cost_embedding = torch.rand(32000, 4096)
 emo_loss = EMOLoss(logits, labels, cost_embedding, ignore_index=-100)
