@@ -1,4 +1,4 @@
-<img alt="Static Badge" src="https://img.shields.io/badge/paper-arxiv-red?link=https%3A%2F%2Farxiv.org%2Fabs%2F2310.04691">
+![Static Badge](https://img.shields.io/badge/paper-arxiv-red?link=https%3A%2F%2Farxiv.org%2Fabs%2F2310.04691)
 
 # EMO
 <p align="center">
