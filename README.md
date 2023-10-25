@@ -3,13 +3,6 @@
 </p>
 
 # EMO
-<p>
-<object width=90 height=20 alt="Static Badge" data="https://img.shields.io/badge/paper-arxiv-red?link=https%3A%2F%2Farxiv.org%2Fabs%2F2310.04691">
-</object>
-<object width=90 height=20 alt="Static Badge" data="https://img.shields.io/badge/pip-pypi-blue?link=https%3A%2F%2Fpypi.org%2Fproject%2FEMOLoss%2F0.0.1%2F%23description">
-</object>
-</p>
-
 This is the public codebase for arxiv paper: [EMO: Earth Mover Distance Optimization for Auto-regressive Language Modeling](https://arxiv.org/abs/2310.04691).
 
 ## Abstract
