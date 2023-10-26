@@ -34,7 +34,7 @@ from emo import EMOLoss
 Signature of EMOLoss
 Args:
     logits (Tensor, requried): the output logits after lm_head, before applying softmax
-    labels (Tensor, required): the ground truth next tokens
+    labels (Tensor, required): ids of ground truth next token
     cost_embedding (Tensor, required): the cost embedding used to compute the transport cost between individual pairs of tokens
     ignore_index (Tensor, optional): usually set to -100 as in nn.CrossEntropyLoss
     mode (Int, optional): 1 by default, it means putting more weight on the MLE loss. Setting mode=2 will put more emphasis on EMO loss. 
@@ -44,13 +44,13 @@ Shape:
     - cost_embedding: (vocab_size, hidden_size)
 """
 logits = torch.rand(32, 1024, 32000, requires_grad=True)
-labels = torch.ones(32, 1024)
+labels = torch.ones(32, 1024, dtype=torch.long)
 cost_embedding = torch.rand(32000, 4096)
 emo_loss = EMOLoss(logits, labels, cost_embedding, ignore_index=-100)
 ```
 The `cost_embedding` must share the same vocabulary size as `logits`, e.g., 32000 for LLaMa. However, the hidden size of `cost_embedding` is not required to be identical to the model you want to train.
 ## Setup
-We recommend using `python>=3.10.0`, `torch>=2.0.1`, `transformers>=4.30.0`.
+We recommend using `python>=3.10.0`, `torch>=2.0.1`, `transformers>=4.34.0`.
 ```bash
 git clone https://github.com/DRSY/EMO.git
 cd EMO
