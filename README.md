@@ -29,8 +29,8 @@ This is the public codebase for arxiv paper: [EMO: Earth Mover Distance Optimiza
     - [Run continual fine-tuning on WikiText-103](#run-continual-fine-tuning-on-wikitext-103)
     - [Run downstream tasks using few-shot in-context learning](#run-downstream-tasks-using-few-shot-in-context-learning)
   - [📚 Instruction-Tuning](#-instruction-tuning)
-  - [🌐 Acknowledgements](#-acknowledgements)
-  - [Citation](#citation)
+- [🌐 Acknowledgements](#-acknowledgements)
+- [Citation](#citation)
 
 ## Abstract
 Neural language models are probabilistic models of human text. They are predominantly trained using maximum likelihood estimation (MLE), which is equivalent
@@ -179,7 +179,7 @@ bash train_emo_alpaca_gpt4.sh MODEL_PATH OUTPUT_DIR
 ```
 Training hyper-parameters such as training objective(`mle|emo`), training epochs, and global batch size are defined in [train_emo_alpaca_gpt4.sh](./instruction_tuning/train_emo_alpaca_gpt4.sh) and are kept the same as in Stanford Alpaca codebase, feel free to adjust them as needed.
 
-## 🌐 Acknowledgements
+# 🌐 Acknowledgements
 + Evaluation on NLU tasks is implemented using [OpenICL](https://github.com/Shark-NLP/OpenICL).
 + Instruction-tuning code is adapted from [Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca).
 + Implementation of baselines are based on:
@@ -187,7 +187,7 @@ Training hyper-parameters such as training objective(`mle|emo`), training epochs
   + [MixCE](https://github.com/bloomberg/mixce-acl2023)
 
 
-## Citation
+# Citation
 If you find that our paper or code useful, please cite the paper as follows:
 ```latex
 @misc{ren2023emo,
