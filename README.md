@@ -20,8 +20,8 @@ This is the public codebase for arxiv paper: [EMO: Earth Mover Distance Optimiza
   - [Abstract](#abstract)
 - [Usage](#usage)
   - [Standalone Package](#standalone-package)
-    - [Use EMO as an indepedent loss function](#use-emo-as-an-indepedent-loss-function)
-    - [Use EMO as a patch to existing models](#use-emo-as-a-patch-to-existing-models)
+  - [Use EMO as an indepedent loss function](#use-emo-as-an-indepedent-loss-function)
+  - [Use EMO as a patch to existing models](#use-emo-as-a-patch-to-existing-models)
   - [Setup](#setup)
   - [Code Structure](#code-structure)
   - [🏫 Language Modeling Experiments](#-language-modeling-experiments)
@@ -43,7 +43,7 @@ We provide PyPi package of EMO as a easy-to-use loss function. Before install EM
 ```bash
 pip install EMOLoss==0.0.1
 ```
-### Use EMO as an indepedent loss function
+## Use EMO as an indepedent loss function
 EMO requires three input fields, namely logits, labels, and cost_embedding:
 ```python
 import torch
@@ -67,7 +67,7 @@ cost_embedding = torch.rand(32000, 4096)
 emo_loss = EMOLoss(logits, labels, cost_embedding, ignore_index=-100)
 ```
 The `cost_embedding` must share the same vocabulary size as `logits`, e.g., 32000 for LLaMa. However, the hidden size of `cost_embedding` is not required to be identical to the model you want to train.
-### Use EMO as a patch to existing models
+## Use EMO as a patch to existing models
 EMO can also be integrated into HuggingFace's `transformers` using `emo_patch.py`. Below is an example of replacing the original forward function of `transformers.LlamaForCausalLM` with EMO:
 ```python
 from transformers import LlamaForCausalLM
