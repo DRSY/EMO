@@ -14,6 +14,24 @@
 
 This is the public codebase for arxiv paper: [EMO: Earth Mover Distance Optimization for Auto-regressive Language Modeling](https://arxiv.org/abs/2310.04691).
 
+## TABLE OF CONTENTS
+- [EMO](#emo)
+  - [TABLE OF CONTENTS](#table-of-contents)
+  - [Abstract](#abstract)
+- [Usage](#usage)
+  - [Standalone Package](#standalone-package)
+    - [Use EMO as an indepedent loss function](#use-emo-as-an-indepedent-loss-function)
+    - [Use EMO as a patch to existing models](#use-emo-as-a-patch-to-existing-models)
+  - [Setup](#setup)
+  - [Code Structure](#code-structure)
+  - [🏫 Language Modeling Experiments](#-language-modeling-experiments)
+  - [📑 NLU Experiments](#-nlu-experiments)
+    - [Run continual fine-tuning on WikiText-103](#run-continual-fine-tuning-on-wikitext-103)
+    - [Run downstream tasks using few-shot in-context learning](#run-downstream-tasks-using-few-shot-in-context-learning)
+  - [📚 Instruction-Tuning](#-instruction-tuning)
+  - [🌐 Acknowledgements](#-acknowledgements)
+  - [Citation](#citation)
+
 ## Abstract
 Neural language models are probabilistic models of human text. They are predominantly trained using maximum likelihood estimation (MLE), which is equivalent
 to minimizing the forward cross-entropy between the empirical data distribution and the model distribution. However, various degeneration phenomena are still
@@ -50,7 +68,7 @@ emo_loss = EMOLoss(logits, labels, cost_embedding, ignore_index=-100)
 ```
 The `cost_embedding` must share the same vocabulary size as `logits`, e.g., 32000 for LLaMa. However, the hidden size of `cost_embedding` is not required to be identical to the model you want to train.
 ### Use EMO as a patch to existing models
-EMO can also be integrated into HuggingFace's `transformers` via the following monky patch. Below is an example of replacing the original forward function of `transformers.LlamaForCausalLM` with EMO:
+EMO can also be integrated into HuggingFace's `transformers` using `emo_patch.py`. Below is an example of replacing the original forward function of `transformers.LlamaForCausalLM` with EMO:
 ```python
 from transformers import LlamaForCausalLM
 from emo_patch import replace_llama_forward_with_emo_forward
