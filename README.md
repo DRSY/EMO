@@ -25,7 +25,7 @@ We provide PyPi package of EMO as a easy-to-use loss function. Before install EM
 ```bash
 pip install EMOLoss==0.0.1
 ```
-### Examples
+### Use EMO as an indepedent loss function
 EMO requires three input fields, namely logits, labels, and cost_embedding:
 ```python
 import torch
@@ -49,6 +49,29 @@ cost_embedding = torch.rand(32000, 4096)
 emo_loss = EMOLoss(logits, labels, cost_embedding, ignore_index=-100)
 ```
 The `cost_embedding` must share the same vocabulary size as `logits`, e.g., 32000 for LLaMa. However, the hidden size of `cost_embedding` is not required to be identical to the model you want to train.
+### Use EMO as a patch to existing models
+EMO can also be integrated into HuggingFace's `transformers` via the following monky patch. Below is an example of replacing the original forward function of `transformers.LlamaForCausalLM` with EMO:
+```python
+from transformers import LlamaForCausalLM
+from emo_patch import replace_llama_forward_with_emo_forward
+from copy import deepcopy
+
+# replace original llama forward function with EMO forward function
+replace_llama_forward_with_emo_forward()
+
+# define your model
+model = LlamaForCausalLM.from_pretrained(...)
+
+# define cost embedding, shape: (vocab_size, hidden_size)
+# usually initialized from the lm_head.weight.data of the model undergoing fine-tuning
+cost_embedding = deepcopy(model.lm_head.weight.data)
+
+# register cost_embedding to the model
+model.register_buffer("cost_embedding", cost_embedding)
+
+# training code
+...
+```
 ## Setup
 We recommend using `python>=3.10.0`, `torch>=2.0.1`, `transformers>=4.34.0`.
 ```bash
