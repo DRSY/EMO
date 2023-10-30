@@ -19,6 +19,9 @@ def emo_forward(
     output_hidden_states: Optional[bool] = None,
     return_dict: Optional[bool] = None,
 ):
+    """
+    forward function of EMO
+    """
 
     output_attentions = output_attentions if output_attentions is not None else self.config.output_attentions
     output_hidden_states = (
@@ -74,4 +77,4 @@ def emo_forward(
     return (loss,) + output if loss is not None else output
 
 def replace_llama_forward_with_emo_forward():
-    transformers.models.llama.modeling_llama.LlamaAttention.forward = emo_forward
+    transformers.models.llama.modeling_llama.LlamaForCausalLM.forward = emo_forward
