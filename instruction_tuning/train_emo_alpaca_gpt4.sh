@@ -13,12 +13,11 @@ torchrun --nproc_per_node=4 --master_port=2346 train.py \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 8 \
-    --model_max_length 1024 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
     --save_steps 2000 \
     --save_total_limit 1 \
-    --learning_rate 1e-5 \
+    --learning_rate 2e-5 \
     --weight_decay 0. \
     --warmup_ratio 0.03 \
     --lr_scheduler_type "cosine" \
