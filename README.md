@@ -177,7 +177,7 @@ Run the following command to launch training of specified model using the alpaca
 cd instruction_tuning
 bash train_emo_alpaca_gpt4.sh MODEL_PATH OUTPUT_DIR
 ```
-Training hyper-parameters such as training objective(`mle|emo`), training epochs, and global batch size are defined in [train_emo_alpaca_gpt4.sh](./instruction_tuning/train_emo_alpaca_gpt4.sh) and are kept the same as in Stanford Alpaca codebase, feel free to adjust them as needed. **Training with Deepspeed has been reported to have abnormal loss curve, while it is normal for FSDP. Therefore, we recommend using FSDP as the distributed training framework for now.**
+Training hyper-parameters such as training objective(`mle|emo`), training epochs, and global batch size are defined in [train_emo_alpaca_gpt4.sh](./instruction_tuning/train_emo_alpaca_gpt4.sh) and are kept the same as in Stanford Alpaca codebase, feel free to adjust them as needed.
 
 # 🌐 Acknowledgements
 + Evaluation on NLU tasks is implemented using [OpenICL](https://github.com/Shark-NLP/OpenICL).
