@@ -1,13 +1,14 @@
 export CUDA_VISIBLE_DEVICES=0,1,2,3
 model_path=$1
 output_path=$2
+mode=$3
 
 
 torchrun --nproc_per_node=4 --master_port=2346 train.py \
     --model_name_or_path $model_path \
-    --mode emo \
+    --mode $mode \
     --data_path alpaca_gpt4_data.json \
-    --fp16 True \
+    --bf16 True \
     --output_dir $output_path \
     --num_train_epochs 3 \
     --per_device_train_batch_size 4 \
@@ -22,7 +23,6 @@ torchrun --nproc_per_node=4 --master_port=2346 train.py \
     --warmup_ratio 0.03 \
     --lr_scheduler_type "cosine" \
     --logging_steps 1 \
-    --fsdp "full_shard auto_wrap" \
-    --fsdp_transformer_layer_cls_to_wrap 'LlamaDecoderLayer' \
+    --deepspeed deepspeed_zero2.json \
     --report_to none \
     --tf32 True

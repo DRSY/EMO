@@ -170,14 +170,20 @@ CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_PATH/MERGED_PATH
 > you may have to modify the model initialization part of OpenICL in order to run inference in torch.float16 data type.
 
 ## 📚 Instruction-Tuning
-EMO is also applicable in supervised instruction-tuning stage. We provide distributed training script(FSDP full fine-tuning using 4 GPUs) in [instruction_tuning](./instruction_tuning/) folder. We have tested on LLaMa-7B/13B and LLaMa2-7B/13B on the Alpaca-GPT4 dataset. The responses of EMO-tuned models are more frequently deemed as better than those produced by MLE-tuned ones, judged by GPT-4, [Auto-J](https://github.com/GAIR-NLP/auto-j), and [PandaLM](https://github.com/WeOpenML/PandaLM).
-
-Run the following command to launch training of specified model using the alpaca-gpt4 dataset:
+EMO is also applicable in supervised instruction-tuning stage. We have tested on LLaMa-7B/13B and LLaMa2-7B/13B on the Alpaca-GPT4 dataset. The responses of EMO-tuned models are more frequently deemed as better than those produced by MLE-tuned ones, judged by GPT-4, [Auto-J](https://github.com/GAIR-NLP/auto-j), and [PandaLM](https://github.com/WeOpenML/PandaLM).
+We provide distributed training script(`FSDP` full fine-tuning using 4 GPUs) in [instruction_tuning](./instruction_tuning/) folder. Run the following command to launch training of specified model using the alpaca-gpt4 dataset:
 ```bash
 cd instruction_tuning
-bash train_emo_alpaca_gpt4.sh MODEL_PATH OUTPUT_DIR
+mode=[emo|mle]
+bash train_alpaca_gpt4_fsdp.sh MODEL_PATH OUTPUT_DIR $mode
 ```
-Training hyper-parameters such as training objective(`mle|emo`), training epochs, and global batch size are defined in [train_emo_alpaca_gpt4.sh](./instruction_tuning/train_emo_alpaca_gpt4.sh) and are kept the same as in Stanford Alpaca codebase, feel free to adjust them as needed.
+Hyper-parameters such as training epochs, and global batch size are defined in the bash script. Feel free to adjust them as needed.
+We also provide training script using `Deepspeed` zero-2 at [train_alpaca_gpt4_deepspeed.sh](./instruction_tuning/train_alpaca_gpt4_deepspeed.sh).
+```bash
+cd instruction_tuning
+mode=[emo|mle]
+bash train_alpaca_gpt4_deepspeed.sh MODEL_PATH OUTPUT_DIR $mode
+```
 
 # 🌐 Acknowledgements
 + Evaluation on NLU tasks is implemented using [OpenICL](https://github.com/Shark-NLP/OpenICL).
