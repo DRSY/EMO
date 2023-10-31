@@ -41,7 +41,7 @@ widely observed when decoding from the distributions learned by such models. We 
 ## Standalone Package
 We provide PyPi package of EMO as a easy-to-use loss function. Before install EMO, make sure you have installed `torch`.
 ```bash
-pip install EMOLoss==0.0.1
+pip install EMOLoss==0.0.2
 ```
 ## Use EMO as an indepedent loss function
 EMO requires three input fields, namely logits, labels, and cost_embedding:
