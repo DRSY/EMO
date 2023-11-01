@@ -20,7 +20,7 @@ This is the public codebase for arxiv paper: [EMO: Earth Mover Distance Optimiza
   - [Abstract](#abstract)
 - [Usage](#usage)
   - [Standalone Package](#standalone-package)
-  - [Use EMO as an indepedent loss function](#use-emo-as-an-indepedent-loss-function)
+  - [Use EMO as an independent loss function](#use-emo-as-an-independent-loss-function)
   - [Use EMO as a patch to existing models](#use-emo-as-a-patch-to-existing-models)
   - [Setup](#setup)
   - [Code Structure](#code-structure)
@@ -43,7 +43,7 @@ We provide PyPi package of EMO as a easy-to-use loss function. Before install EM
 ```bash
 pip install EMOLoss==0.0.2
 ```
-## Use EMO as an indepedent loss function
+## Use EMO as an independent loss function
 EMO requires three input fields, namely logits, labels, and cost_embedding:
 ```python
 import torch
