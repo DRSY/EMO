@@ -23,6 +23,6 @@ torchrun --nproc_per_node=4 --master_port=2346 train.py \
     --warmup_ratio 0.03 \
     --lr_scheduler_type "cosine" \
     --logging_steps 1 \
-    --deepspeed deepspeed_zero2.json \
+    --deepspeed ./ds_config/deepspeed_zero3.json \
     --report_to none \
     --tf32 True
