@@ -96,6 +96,11 @@ We recommend using `python>=3.10.0`, `torch>=2.0.1`, `transformers>=4.34.0`.
 git clone https://github.com/DRSY/EMO.git
 cd EMO
 pip install -r requirements.txt
+pip install flash-attn --no-build-isolation
+```
+You also need to install `DeepSpeed` if you prefer it over `FSDP` for distributed training.
+```bash
+pip install deepspeed
 ```
 ## Code Structure
 This repository provide training scripts for three different scenarios, i.e., language modeling, continual fine-tuning, and instruction tuning, as discussed in the paper. Detailed instructions for each scenario are described in the following sections.
