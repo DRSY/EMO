@@ -4,7 +4,7 @@ import torch
 from torch import nn
 
 import transformers
-
+from transformers.models.llama.modeling_llama import CausalLMOutputWithPast
 
 def emo_forward(
     self,
@@ -74,8 +74,18 @@ def emo_forward(
     loss = (torch.min((mle_loss / (emo_loss+1e-10)).detach(), torch.ones_like(mle_loss, dtype=mle_loss.dtype, device=mle_loss.device)*3.0) * emo_loss + mle_loss) * 0.5
     loss = (loss * mask).sum() / (1e-15 + mask.sum())
 
-    output = (logits,) + outputs[1:]
-    return (loss,) + output if loss is not None else output
+    if not return_dict:
+        output = (logits,) + outputs[1:]
+        return (loss,) + output if loss is not None else output
+    
+    return CausalLMOutputWithPast(
+            loss=loss,
+            logits=logits,
+            past_key_values=outputs.past_key_values,
+            hidden_states=outputs.hidden_states,
+            attentions=outputs.attentions,
+        )
+
 
 def replace_llama_forward_with_emo_forward():
     transformers.models.llama.modeling_llama.LlamaForCausalLM.forward = emo_forward
