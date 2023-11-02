@@ -4,7 +4,7 @@ output_path=$2
 mode=$3
 
 
-torchrun --nproc_per_node=4 --master_port=2346 train.py \
+deepspeed --num_gpus=4 train.py \
     --model_name_or_path $model_path \
     --mode $mode \
     --data_path alpaca_gpt4_data.json \
