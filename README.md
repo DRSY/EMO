@@ -71,11 +71,18 @@ The `cost_embedding` must share the same vocabulary size as `logits`, e.g., 3200
 EMO can also be integrated into HuggingFace's `transformers` using `emo_patch.py`. Below is an example of replacing the original forward function of `transformers.LlamaForCausalLM` with EMO:
 ```python
 from transformers import LlamaForCausalLM
-from emo_patch import replace_llama_forward_with_emo_forward
+from emo_patch import (
+  replace_llama_forward_with_emo_forward,
+  replace_llama_forward_with_adaptive_emo_forward
+)
 from copy import deepcopy
 
 # replace original llama forward function with EMO forward function
 replace_llama_forward_with_emo_forward()
+# or
+# replace original llama forward function with adaptive EMO forward function
+# use dynamically updated lm_head
+replace_llama_forward_with_adaptive_emo_forward()
 
 # define your model
 model = LlamaForCausalLM.from_pretrained(...)
