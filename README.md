@@ -77,24 +77,25 @@ from emo_patch import (
 )
 from copy import deepcopy
 
-# replace original llama forward function with EMO forward function
+# Option-1
+# Replace original llama forward function with EMO forward function
 replace_llama_forward_with_emo_forward()
-# or
-# replace original llama forward function with adaptive EMO forward function
+# Define cost embedding, shape: (vocab_size, hidden_size)
+# usually initialized from the lm_head.weight.data of the model undergoing fine-tuning
+cost_embedding = deepcopy(model.lm_head.weight.data)
+# Register cost_embedding to the model
+model.register_buffer("cost_embedding", cost_embedding)
+
+# Option-2
+# Replace original llama forward function with adaptive EMO forward function
 # use dynamically updated lm_head
 replace_llama_forward_with_adaptive_emo_forward()
 
-# define your model
+# Define your model
 model = LlamaForCausalLM.from_pretrained(...)
 
-# define cost embedding, shape: (vocab_size, hidden_size)
-# usually initialized from the lm_head.weight.data of the model undergoing fine-tuning
-cost_embedding = deepcopy(model.lm_head.weight.data)
 
-# register cost_embedding to the model
-model.register_buffer("cost_embedding", cost_embedding)
-
-# training code
+# Training code
 ...
 ```
 ## Setup
