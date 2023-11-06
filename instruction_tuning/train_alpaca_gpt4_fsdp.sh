@@ -8,7 +8,7 @@ torchrun --nproc_per_node=4 --master_port=2346 train.py \
     --model_name_or_path $model_path \
     --mode $mode \
     --data_path alpaca_gpt4_data.json \
-    --fp16 True \
+    --bf16 True \
     --output_dir $output_path \
     --num_train_epochs 3 \
     --per_device_train_batch_size 4 \
