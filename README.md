@@ -194,7 +194,7 @@ mode=[emo|mle]
 bash train_alpaca_gpt4_fsdp.sh MODEL_PATH OUTPUT_DIR $mode
 ```
 Hyper-parameters such as training epochs, and global batch size are defined in the bash script. Feel free to adjust them as needed.
-We also provide training script using `DeepSpeed` at [train_alpaca_gpt4_deepspeed.sh](./instruction_tuning/train_alpaca_gpt4_deepspeed.sh), which empirically find to produce higher-quality models and faster training speed.
+We also provide training script using `DeepSpeed` at [train_alpaca_gpt4_deepspeed.sh](./instruction_tuning/train_alpaca_gpt4_deepspeed.sh), which we empirically find to produce higher-quality models and faster training speed.
 ```bash
 cd instruction_tuning
 mode=[emo|mle]
