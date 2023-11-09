@@ -174,6 +174,21 @@ class GPT2MIXModel(GPT2PreTrainedModel):
             cosine_dist = cosine_dist.reshape(bsz, seq_len)
             emo_loss = cosine_dist.reshape(-1)
             mle_loss = (mle_loss + (mle_loss / (emo_loss+1e-10)).detach() * emo_loss) * 0.5
+        elif mode == 'adaptive_emo':
+            bsz = input_ids.shape[0]
+            labels_tmp = labels.clone()
+            labels_tmp[labels_tmp==(-100)] = 0
+            one_hot = torch.nn.functional.one_hot(labels_tmp, num_classes=self.lm.config.vocab_size)
+            stable_onehot = (one_hot+1e-15) / torch.linalg.vector_norm((one_hot+1e-15), ord=1, dim=-1, keepdim=True) # (bsz*seq_len, vocab_size)
+            embedding_matrix = self.lm.lm_head.weight.data() # (vocab_size, hidden_size)
+            embedding_matrix = embedding_matrix / torch.linalg.vector_norm(embedding_matrix, ord=2, dim=1, keepdim=True)
+            p_contextual_repr = stable_onehot @ embedding_matrix # (bsz*seq_len, hidden_size)
+            q_grad = torch.log_softmax(logits, dim=-1).exp() # (bsz*seq_len, vocab_size)
+            q_contextual_repr = q_grad @ embedding_matrix # (bsz*seq_len, hidden_size)
+            cosine_dist = 1 - torch.sum(p_contextual_repr*q_contextual_repr, dim=-1) # (bsz*seq_len,)
+            cosine_dist = cosine_dist.reshape(bsz, seq_len)
+            emo_loss = cosine_dist.reshape(-1)
+            mle_loss = (mle_loss + (mle_loss / (emo_loss+1e-10)).detach() * emo_loss) * 0.5
         elif mode == 'mle':
             """
             Standard Maximum likelihood estimation

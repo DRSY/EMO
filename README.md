@@ -143,12 +143,12 @@ This repository provide training scripts for three different scenarios, i.e., la
 │   └── test_utils.py
 ```
 ## 🏫 Language Modeling Experiments
-The core code and scripts for language modeling experiments in the paper are located at [language_modeling](./language_modeling/). Model file that implements various training objective can be found at [gpt2.py](./language_modeling/gpt2.py).Training hyper-parameters can be adjusted in [run_lm_gpt2.sh](./language_modeling/run_lm_gpt2.sh). The argument "mode" specifies the training objective(`mle|mixce|tvd|emo`).
+The core code and scripts for language modeling experiments in the paper are located at [language_modeling](./language_modeling/). Model file that implements various training objective can be found at [gpt2.py](./language_modeling/gpt2.py).Training hyper-parameters can be adjusted in [run_lm_gpt2.sh](./language_modeling/run_lm_gpt2.sh). The argument "mode" specifies the training objective selected from `mle|mixce|tvd|emo|adaptive_emo`.
 ```bash
 cd language_modeling
 bash run_lm_gpt2.sh
 ```
-We use [Mauve](https://github.com/krishnap25/mauve) as the primary evaluation metrics, make sure you install it before running the above script.
+We use [Mauve](https://github.com/krishnap25/mauve) as the primary evaluation metrics to assess the distributional similarity between model outputs and reference texts. Make sure you install it before running the above script.
 
 ## 📑 NLU Experiments
 Scripts related to continual fine-tuning and downstream NLU evaluations are located under [continual_finetuning](./continual_finetuning/).

@@ -6,8 +6,8 @@ bsz=32
 block_size=256
 decode_newlen=80
 decoding_mode=unbiased
-epochs=3
-mode=emo
+epochs=1
+mode=emo # select from mle/tvd/mixce/emo/adaptive_emo
 seed=42
 
 # hyper-parameters
