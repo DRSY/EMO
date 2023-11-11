@@ -41,58 +41,50 @@ widely observed when decoding from the distributions learned by such models. We 
 ## Standalone Package
 We provide PyPi package of EMO as a easy-to-use loss function. Before install EMO, make sure you have installed `torch`.
 ```bash
-pip install EMOLoss==0.0.2
+pip install EMOLoss==0.0.3
 ```
 ## Use EMO as an independent loss function
-EMO requires three input fields, namely logits, labels, and cost_embedding:
+EMO requires three input fields, namely `logits`, `labels`, and `cost_embedding`. 
 ```python
 import torch
 from emo import EMOLoss
-"""
-Signature of EMOLoss
-Args:
-    logits (Tensor, requried): the output logits after lm_head, before applying softmax
-    labels (Tensor, required): ids of ground truth next token
-    cost_embedding (Tensor, required): the cost embedding used to compute the transport cost between individual pairs of tokens
-    ignore_index (Tensor, optional): usually set to -100 as in nn.CrossEntropyLoss
-    mode (Int, optional): 1 by default, it means putting more weight on the MLE loss. Setting mode=2 will put more emphasis on EMO loss. 
-Shape:
-    - logits: (batch_size, seq_len, vocab_size) 
-    - labels: (batch_size, seq_len)
-    - cost_embedding: (vocab_size, hidden_size)
-"""
 logits = torch.rand(32, 1024, 32000, requires_grad=True)
 labels = torch.ones(32, 1024, dtype=torch.long)
 cost_embedding = torch.rand(32000, 4096)
-emo_loss = EMOLoss(logits, labels, cost_embedding, ignore_index=-100)
+emo_loss = EMOLoss(logits, labels, cost_embedding, ignore_index=-100, mode=1)
 ```
+> **Signature of EMOLoss**
+> - `logits` (Tensor, requried): the output logits after lm_head, before applying softmax
+> - `labels` (Tensor, required): ids of ground truth next token
+> - `cost_embedding` (Tensor, required) can be a fixed matrix extracted from a pre-trained model(more suitable for continual pre-training on general corpus), or can be the lm_head of the model currently being trained to inject task/domain-specific information(more suitable for domain-specific adaptation or instruction tuning). 
+> - `ignore_index` (Int, Optional): default to -100.
+> - `mode` (Int, Optional): loss weighting mode. 1 means that MLE is emphasized(more suitable for domain-specific adaptation) and 2 means that EMO is emphasized(more suitable for continual pre-training and instruction-tuning).
+
 The `cost_embedding` must share the same vocabulary size as `logits`, e.g., 32000 for LLaMa. However, the hidden size of `cost_embedding` is not required to be identical to the model you want to train.
 ## Use EMO as a patch to existing models
 EMO can also be integrated into HuggingFace's `transformers` using `emo_patch.py`. Below is an example of replacing the original forward function of `transformers.LlamaForCausalLM` with EMO:
 ```python
 from transformers import LlamaForCausalLM
 from emo_patch import (
-  replace_llama_forward_with_emo_forward,
-  replace_llama_forward_with_adaptive_emo_forward
+  replace_llama_forward_with_emo_1_adaptive_forward,
+  replace_llama_forward_with_emo_2_adaptive_forward,
+  replace_llama_forward_with_emo_2_fixed_forward,
 )
 from copy import deepcopy
 
-# Option-1
-# Replace original llama forward function with EMO forward function
-replace_llama_forward_with_emo_forward()
-# Define cost embedding, shape: (vocab_size, hidden_size)
-# usually initialized from the lm_head.weight.data of the model undergoing fine-tuning
-cost_embedding = deepcopy(model.lm_head.weight.data)
-# Register cost_embedding to the model
-model.register_buffer("cost_embedding", cost_embedding)
+# EMO-1-Adaptive
+replace_llama_forward_with_emo_1_adaptive_forward()
 
-# Option-2
-# Replace original llama forward function with adaptive EMO forward function
-# use dynamically updated lm_head
-replace_llama_forward_with_adaptive_emo_forward()
+# Or
+# EMO-2-Adaptive
+replace_llama_forward_with_emo_2_adaptive_forward()
 
-# Define your model
+# Or
+# EMO-2-Fixed
+replace_llama_forward_with_emo_2_fixed_forward()
 model = LlamaForCausalLM.from_pretrained(...)
+cost_embedding = deepcopy(model.lm_head.weight.data)
+model.register_buffer("cost_embedding", cost_embedding)
 
 
 # Training code
