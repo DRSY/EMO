@@ -12,7 +12,7 @@ torchrun --nproc_per_node=4 --master_port=2346 run_clm_trainer_emo_fsdp.py \
     --mode $mode \
     --dataset_name wikitext \
     --dataset_config_name $dataset_name \
-    --fp16 True \
+    --bf16 True \
     --num_train_epochs 1 \
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 16 \
