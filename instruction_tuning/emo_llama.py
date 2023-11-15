@@ -71,8 +71,9 @@ class EMOLlamaForCausalLM(LlamaForCausalLM):
         p_contextual_repr = stable_onehot @ embedding_matrix # (bsz*seq_len, hidden_size)
         q_grad = torch.log_softmax(logits, dim=-1).exp() # (bsz*seq_len, vocab_size)
         q_contextual_repr = q_grad @ embedding_matrix # (bsz*seq_len, hidden_size)
+        threshold = (1 - torch.sum(p_contextual_repr*p_contextual_repr, dim=-1))
         emo_loss = (1 - torch.sum(p_contextual_repr*q_contextual_repr, dim=-1)) # (bsz*seq_len,)
-        emo_loss = emo_loss * mask
+        emo_loss = (torch.abs(emo_loss-threshold)+threshold) * mask
 
         # ======================================================================== #
         #                   Compose the final loss
