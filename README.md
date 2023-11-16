@@ -56,9 +56,9 @@ emo_loss = EMOLoss(logits, labels, cost_embedding, ignore_index=-100, mode=1)
 > **Signature of EMOLoss**
 > - `logits` (Tensor, requried): the output logits after lm_head, before applying softmax
 > - `labels` (Tensor, required): ids of ground truth next token
-> - `cost_embedding` (Tensor, required) can be a fixed matrix extracted from a pre-trained model(more suitable for continual pre-training on general corpus), or can be the lm_head of the model currently being trained to inject task/domain-specific information(more suitable for domain-specific adaptation or instruction tuning). 
+> - `cost_embedding` (Tensor, required) can be a fixed matrix extracted from a pre-trained model(more suitable for lightweight continual pre-training on general corpus), or can be the lm_head of the model currently being trained to inject task/domain-specific information(more suitable for domain-specific adaptation or instruction tuning). 
 > - `ignore_index` (Int, Optional): default to -100.
-> - `mode` (Int, Optional): loss weighting mode. 1 means that MLE is emphasized(more suitable for domain-specific adaptation) and 2 means that EMO is emphasized(more suitable for continual pre-training and instruction-tuning).
+> - `mode` (Int, Optional): loss weighting mode. 1 means that MLE is emphasized(more suitable for domain-specific adaptation) and 2 means that EMO is emphasized(more suitable for lightweight continual pre-training).
 
 The `cost_embedding` must share the same vocabulary size as `logits`, e.g., 32000 for LLaMa. However, the hidden size of `cost_embedding` is not required to be identical to the model you want to train.
 ## Use EMO as a patch to existing models
