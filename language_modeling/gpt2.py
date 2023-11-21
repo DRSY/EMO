@@ -184,7 +184,9 @@ class GPT2MIXModel(GPT2PreTrainedModel):
             embedding_matrix = embedding_matrix / torch.linalg.vector_norm(embedding_matrix, ord=2, dim=1, keepdim=True)
             p_contextual_repr = stable_onehot @ embedding_matrix # (bsz*seq_len, hidden_size)
             q_grad = torch.log_softmax(logits, dim=-1).exp() # (bsz*seq_len, vocab_size)
-            q_contextual_repr = q_grad @ embedding_matrix # (bsz*seq_len, hidden_size)
+            gt_q = (q_grad * one_hot).detach()
+            q_final = q_grad - gt_q
+            q_contextual_repr = q_final @ embedding_matrix # (bsz*seq_len, hidden_size)
             cosine_dist = 1 - torch.sum(p_contextual_repr*q_contextual_repr, dim=-1) # (bsz*seq_len,)
             cosine_dist = cosine_dist.reshape(bsz, seq_len)
             emo_loss = cosine_dist.reshape(-1)
