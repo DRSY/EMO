@@ -66,17 +66,12 @@ EMO can also be integrated into HuggingFace's `transformers` using `emo_patch.py
 from transformers import LlamaForCausalLM
 from emo_patch import (
   replace_llama_forward_with_emo_1_adaptive_forward,
-  replace_llama_forward_with_emo_2_adaptive_forward,
   replace_llama_forward_with_emo_2_fixed_forward,
 )
 from copy import deepcopy
 
 # EMO-1-Adaptive
 replace_llama_forward_with_emo_1_adaptive_forward()
-
-# Or
-# EMO-2-Adaptive
-replace_llama_forward_with_emo_2_adaptive_forward()
 
 # Or
 # EMO-2-Fixed
@@ -187,6 +182,7 @@ CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_PATH/MERGED_PATH
 CoT: Chain-of-Thought submix of FLANv2
 UI: Unnatural Instruction
 Code: Code Alpaca
+EMO: replace_llama_forward_with_emo_1_adaptive_forward()
 
 ***Below is the old version which uses Stanford Alpaca codebase***
 EMO is also applicable in supervised instruction-tuning stage. We have tested on LLaMa-7B/13B and LLaMa2-7B/13B on the [Alpaca-GPT4](https://huggingface.co/datasets/vicgalle/alpaca-gpt4) and a recycled version of [Evol-Instruct-70K](https://huggingface.co/datasets/umd-zhou-lab/recycled_wiz70_v1) datasets. The responses of EMO-tuned models are more frequently deemed as better than those produced by MLE-tuned ones, judged by GPT-4, [Auto-J](https://github.com/GAIR-NLP/auto-j), and [PandaLM](https://github.com/WeOpenML/PandaLM).
