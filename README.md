@@ -180,8 +180,11 @@ CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_PATH/MERGED_PATH
 | **EMO** | 47.7 | 37.3 | 49.7 | 38.6 | 47.8 | 41.7 | 51.4 | 43.1 |
 
 CoT: Chain-of-Thought submix of FLANv2
+
 UI: Unnatural Instruction
+
 Code: Code Alpaca
+
 EMO: replace_llama_forward_with_emo_1_adaptive_forward()
 
 ***Below is the old version which uses Stanford Alpaca codebase***
