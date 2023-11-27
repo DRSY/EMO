@@ -179,15 +179,12 @@ CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_PATH/MERGED_PATH
 | **MLE** | 46.3 | 36.7 | 49.0 | 37.8 | 47.6 | 38.3 | 50.4 | 41.1 |
 | **EMO** | 47.7 | 37.3 | 49.7 | 38.6 | 47.8 | 41.7 | 51.4 | 43.1 |
 
-CoT: Chain-of-Thought submix of FLANv2
+Tulu_v2_sft_mix: [https://huggingface.co/datasets/allenai/tulu-v2-sft-mixture](https://huggingface.co/datasets/allenai/tulu-v2-sft-mixture). 
 
-UI: Unnatural Instruction
-
-Code: Code Alpaca
-
-EMO: replace_llama_forward_with_emo_1_adaptive_forward()
+EMO: We use the `replace_llama_forward_with_emo_1_adaptive_forward()`.
 
 ***Below is the old version which uses Stanford Alpaca codebase***
+
 EMO is also applicable in supervised instruction-tuning stage. We have tested on LLaMa-7B/13B and LLaMa2-7B/13B on the [Alpaca-GPT4](https://huggingface.co/datasets/vicgalle/alpaca-gpt4) and a recycled version of [Evol-Instruct-70K](https://huggingface.co/datasets/umd-zhou-lab/recycled_wiz70_v1) datasets. The responses of EMO-tuned models are more frequently deemed as better than those produced by MLE-tuned ones, judged by GPT-4, [Auto-J](https://github.com/GAIR-NLP/auto-j), and [PandaLM](https://github.com/WeOpenML/PandaLM).
 We provide distributed training script(`FSDP` full fine-tuning using 4 GPUs) in [instruction_tuning](./instruction_tuning/) folder. Run the following command to launch training of specified model using the alpaca-gpt4 dataset:
 ```bash
