@@ -179,6 +179,14 @@ CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_PATH/MERGED_PATH
 | **MLE** | 46.3 | 36.7 | 49.0 | 37.8 | 47.6 | 38.3 | 50.4 | 41.1 |
 | **EMO** | 47.7 | 37.3 | 49.7 | 38.6 | 47.8 | 41.7 | 51.4 | 43.1 |
 
+
+For models trained on the Tulu_v2_sft_mix dataset, we provide more comprehensive metrics as follows:
+
+|  | **MMLU** | **BBH** | **GSM** | **ARC_Easy** | **ARC_Challenge** | **OpenBookQA** | **TruthfulQA** |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **MLE** | 50.4 | 41.1 | 29.0 | 76.4 | 57.6 | 58.6/58.6 | 31.2/46.3 |
+| **EMO** | 51.4 | 43.1 | 33.0 | 77.3 | 59.3 | 62.0/61.2 | 32.8/48.6 |
+
 Tulu_v2_sft_mix: [https://huggingface.co/datasets/allenai/tulu-v2-sft-mixture](https://huggingface.co/datasets/allenai/tulu-v2-sft-mixture). 
 
 EMO: We use the `replace_llama_forward_with_emo_1_adaptive_forward()`.
