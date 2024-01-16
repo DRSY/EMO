@@ -11,7 +11,7 @@
 </a>
 
 
-This is the public codebase for arxiv paper: [EMO: Earth Mover Distance Optimization for Auto-regressive Language Modeling](https://arxiv.org/abs/2310.04691).
+This is the public codebase for ICLR 2024 paper: [EMO: Earth Mover Distance Optimization for Auto-regressive Language Modeling](https://arxiv.org/abs/2310.04691).
 
 ## TABLE OF CONTENTS
 - [EMO](#emo)
