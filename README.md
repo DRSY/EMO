@@ -172,7 +172,7 @@ CUDA_VISIBLE_DEVICES=0, python icl.py --model_path OUTPUT_PATH/MERGED_PATH
 > you may have to modify the model initialization part of OpenICL in order to run inference in torch.float16 data type.
 
 ## 📚 Instruction-Tuning
-***Update!!!***: We recommend to use [Open-Instrcut](https://github.com/allenai/open-instruct) codebase for conducting instruction-tuning experiments owning to its advantages in terms of prompt design(allow for multi-turn dialogue) and handy train/eval dataset downloading/processing. After training, we obtain the following results using the official evaluation scripts in Open-Instruct:
+***Update!!!***: We recommend to use [Open-Instruct](https://github.com/allenai/open-instruct) codebase for conducting instruction-tuning experiments owning to its advantages in terms of prompt design(allow for multi-turn dialogue) and handy train/eval dataset downloading/processing. After training, we obtain the following results using the official evaluation scripts in Open-Instruct:
 |  | **CoT+UI** |  | **CoT+UI+FLANv2** |  | **Code+GPT4_Alpaca+CoT+FLANv2** |  | **Tulu_v2_sft_mix** |  |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |  | **MMLU** | **BBH** | **MMLU** | **BBH** | **MMLU** | **BBH** | **MMLU** | **BBH** |
